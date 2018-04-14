@@ -6,10 +6,11 @@ const svgMarker = require('../svg-marker');
 const leaflet = require('leaflet');
 const EventEmitter = require('events').EventEmitter;
 const sunCalc = require('suncalc');
-const timeday= require('../timeofday');
+const timeday = require('../timeofday');
 
 const tileUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
-const nightTileUrl='https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png';
+const nightTileUrl =
+  'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png';
 const attribution =
   '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
@@ -18,8 +19,6 @@ const attribution =
 // We need something that makes sense for the scale of bridges
 // and a person/car/vehicle moving between them.
 const defaultZoomLevel = 16;
-
-let daytime;
 
 class BaseUI extends EventEmitter {
   constructor(options) {
@@ -36,27 +35,25 @@ class BaseUI extends EventEmitter {
     // http://leafletjs.com/reference-1.3.0.html#map
     let map = (this.map = leaflet.map(mapEl, this.options));
     var times = sunCalc.getTimes(new Date(), lat, lng);
-    var dayHours = new Date ();
-      if (dayHours > times.sunset || dayHours <= times.sunrise) {
-        leaflet.tileLayer(nightTileUrl, {attribution}).addTo(map);
-          this.currentLocationMarker = leaflet
-              .marker([lat, lng], {
-                  title: 'Current Location',
-                  icon: svgMarker.location_white
-              })
-              .addTo(map);
-      }
-      else{
-        leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
-          this.currentLocationMarker = leaflet
-              .marker([lat, lng], {
-                  title: 'Current Location',
-                  icon: svgMarker.location
-              })
-              .addTo(map);
-      }
+    var dayHours = new Date();
+    if (dayHours > times.sunset || dayHours <= times.sunrise) {
+      leaflet.tileLayer(nightTileUrl, { attribution }).addTo(map);
+      this.currentLocationMarker = leaflet
+        .marker([lat, lng], {
+          title: 'Current Location',
+          icon: svgMarker.location_white
+        })
+        .addTo(map);
+    } else {
+      leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
+      this.currentLocationMarker = leaflet
+        .marker([lat, lng], {
+          title: 'Current Location',
+          icon: svgMarker.location
+        })
+        .addTo(map);
+    }
     map.setView([lat, lng], defaultZoomLevel);
-
 
     // http://leafletjs.com/reference-1.3.0.html#map-event
     let onMapChange = () => this.emit('update', map.getBounds());
@@ -64,7 +61,6 @@ class BaseUI extends EventEmitter {
     map.on('moveend', onMapChange);
 
     // Show a marker at our current location
-
 
     log.info(`Map initialized with centre lat=${lat}, lng=${lng}`);
   }

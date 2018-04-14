@@ -15,13 +15,12 @@ const nightunlockedSvgUrl = require('../icons/material-icons/unlocked_white.svg'
 // All icons share the same size, define it once
 const iconSize = [25, 25];
 
-// Expose custom Leaflet Icons to be used in our markers 
+// Expose custom Leaflet Icons to be used in our markers
 
 module.exports.location_white = leaflet.icon({
   iconUrl: nightlocationSvgUrl,
   iconSize
 });
-
 
 module.exports.locked_white = leaflet.icon({
   iconUrl: nightlockedSvgUrl,
@@ -37,7 +36,6 @@ module.exports.location = leaflet.icon({
   iconUrl: locationSvgUrl,
   iconSize
 });
-
 
 module.exports.locked = leaflet.icon({
   iconUrl: lockedSvgUrl,
